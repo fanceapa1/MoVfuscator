@@ -25,12 +25,41 @@ def createIncTable(size: int):
 
 def createIncCarryTable(size: int):
     table = [0]*size
-    table[size-1] = 1
+    table[255] = 1
     return table
 
-addTable = createAddTable(256)
-addCarryTable = createAddCarryTable(256)
-subTable = createSubTable(256)
-subBorrowTable = createSubBorrowTable(256)
-incTable = createIncTable(256)
-incCarryTable = createIncCarryTable(256)
+def createDecTable(size: int):
+    table = [(i-1)%256 for i in range(size)]
+    return table
+
+def createDecBorrowTable(size: int):
+    table = [0]*size
+    table[0] = 1
+    return table
+
+def createMulLowerTable(size: int):
+    table = [[((i*j)%256) for j in range(size)] for i in range(size)]
+    return table
+
+def createMulHigherTable(size: int):
+    table = [[((i*j)>>8) for j in range(size)] for i in range(size)]
+    return table
+
+def createImulHigherTable(size: int):
+    table = [[(((i - 256 if i > 127 else i) * (j - 256 if j > 127 else j)) >> 8) % 256 for j in range(256)] for i in range(256)]
+    return table
+
+size = 256
+
+addTable = createAddTable(size)
+addCarryTable = createAddCarryTable(size)
+subTable = createSubTable(size)
+subBorrowTable = createSubBorrowTable(size)
+incTable = createIncTable(size)
+incCarryTable = createIncCarryTable(size)
+decTable = createDecTable(size)
+decBorrowTable = createDecBorrowTable(size)
+mulLowerTable = createMulLowerTable(size)
+mulHigherTable = createMulHigherTable(size)
+imulHigherTable = createImulHigherTable(size) # imul table = mul_lo + imul_hi
+
