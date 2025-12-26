@@ -9,7 +9,7 @@ def createAddTable(size: int):
 
 def createAddCarryTable(size: int):
     table = [[(0 if i+j < 256 else 1) for j in range(size)] for i in range(size)]
-    return
+    return table
 
 def createSubTable(size: int):
     table = [[((i-j)%256) for j in range(size)] for i in range(size)]
