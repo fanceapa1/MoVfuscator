@@ -66,6 +66,31 @@ def createIModuloTable(size: int):
     S = lambda x: x - 256 if x > 127 else x
     table = [[(S(i) - int(S(i) / S(j)) * S(j)) & 0xFF if j != 0 else 0 for j in range(256)] for i in range(256)]
     return table
+    
+def createXorTable(size: int):
+    table = [[((i ^ j)) for j in range(size)] for i in range(size)]
+    return table
+def createLeftShiftTable(size: int):
+    table=[[((i << j) % 256)for j in range(size)]for i in range(size)]
+    return table
+def createRightShiftTable(size: int):
+    table=[[(i >> j)for j in range(size)]for i in range(size)]
+    return table
+def createShiftCarryTable(size: int):
+    table = [[(i << j) >> 8 for j in range(size)] for i in range(size)]
+    return table
+def createJeTable(size: int):
+    table=[[(1 if i==j else 0)for j in range(size)for i in range(size)]]
+    return table
+def createJgeTable(size: int):
+    table=[[(1 if i>=j else 0)for  j in range(size)for i in range(size)]]
+    return table
+def createJleTable(size: int):
+    table=[[(1 if i<=j else 0)for j in  range(size)for i in range(size)]]
+    return table
+def createJaTable(size: int):
+    table=[[(1 if i > j else 0)for j in range(size)for i in range(size)]]
+    return table
 
 size = 256
 
@@ -84,3 +109,9 @@ divTable = createDivTable(size) # din fericire in probleme avem doar numere <256
 moduloTable = createModuloTable(size)
 iDivTable = createIdivTable(size) # tabele diferite pentru impartirea cu semn // nu cred ca e necesara
 iModuloTable = createIModuloTable(size)
+xortable = createXorTable(size)
+leftshifttable = createLeftShiftTable(size)
+rightshifttable = createRightShiftTable(size)
+shiftcarrytable = createShiftCarryTableTable(size)
+jetable = createJeTable(size)
+jatable = createJaTable(size)
