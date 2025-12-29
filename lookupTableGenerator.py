@@ -1,7 +1,8 @@
-# add sub inc dec
-# mul div 
-# xor or shl
-# je jge/jb jle/jg ja/jbe jz
+def matrix_to_string(matrix):
+    return " ".join(str(item) for row in matrix for item in row)
+
+def list_to_string(data):
+    return " ".join(str(item) for item in data)
 
 def createAddTable(size: int):
     table = [[((i+j)%256) for j in range(size)] for i in range(size)]
@@ -80,16 +81,16 @@ def createShiftCarryTable(size: int):
     table = [[(i << j) >> 8 for j in range(size)] for i in range(size)]
     return table
 def createJeTable(size: int):
-    table=[[(1 if i==j else 0)for j in range(size)for i in range(size)]]
+    table = [[(1 if i==j else 0)for j in range(size)for i in range(size)]]
     return table
 def createJgeTable(size: int):
-    table=[[(1 if i>=j else 0)for  j in range(size)for i in range(size)]]
+    table = [[(1 if i>=j else 0)for  j in range(size)for i in range(size)]]
     return table
 def createJleTable(size: int):
-    table=[[(1 if i<=j else 0)for j in  range(size)for i in range(size)]]
+    table = [[(1 if i<=j else 0)for j in  range(size)for i in range(size)]]
     return table
 def createJaTable(size: int):
-    table=[[(1 if i > j else 0)for j in range(size)for i in range(size)]]
+    table = [[(1 if i > j else 0)for j in range(size)for i in range(size)]]
     return table
 
 size = 256
@@ -109,9 +110,31 @@ divTable = createDivTable(size) # din fericire in probleme avem doar numere <256
 moduloTable = createModuloTable(size)
 iDivTable = createIdivTable(size) # tabele diferite pentru impartirea cu semn // nu cred ca e necesara
 iModuloTable = createIModuloTable(size)
-xortable = createXorTable(size)
-leftshifttable = createLeftShiftTable(size)
-rightshifttable = createRightShiftTable(size)
-shiftcarrytable = createShiftCarryTable(size)
-jetable = createJeTable(size)
-jatable = createJaTable(size)
+xorTable = createXorTable(size)
+leftShiftTable = createLeftShiftTable(size)
+rightShiftTable = createRightShiftTable(size)
+shiftCarryTable = createShiftCarryTable(size)
+jeTable = createJeTable(size)
+jaTable = createJaTable(size)
+
+tables = [addTable, addCarryTable, subTable, subBorrowTable, mulLowerTable, mulHigherTable, imulHigherTable, divTable,
+        moduloTable, iDivTable, iModuloTable, xorTable, leftShiftTable, rightShiftTable, shiftCarryTable, jeTable, jaTable]
+
+oneLineTables = [incTable, incCarryTable, decTable, decBorrowTable]
+
+memory = ""
+for table in tables:
+    memory += " "
+    memory += matrix_to_string(table)
+
+for table in oneLineTables:
+    memory += " "
+    memory += list_to_string(table)
+
+writeFile = open("./lookupTables.txt", "w")
+writeFile.write(memory)
+writeFile.close()
+# memoria o sa fie un string de forma " 0 1 2 3 4 5....", se potriveste initalizarii in .data
+
+
+
