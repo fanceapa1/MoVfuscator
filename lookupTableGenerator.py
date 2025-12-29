@@ -79,8 +79,8 @@ decTable = createDecTable(size)
 decBorrowTable = createDecBorrowTable(size)
 mulLowerTable = createMulLowerTable(size) # mul table = mul_lo + mul_hi
 mulHigherTable = createMulHigherTable(size)
-imulHigherTable = createImulHigherTable(size) # imul table = mul_lo + imul_hi
+imulHigherTable = createImulHigherTable(size) # imul table = mul_lo + imul_hi // nu cred ca e necesara operatia
 divTable = createDivTable(size) # din fericire in probleme avem doar numere <256 si putem memora toate rezultatele
 moduloTable = createModuloTable(size)
-iDivTable = createIdivTable(size) # tabele diferite pentru impartirea cu semn
+iDivTable = createIdivTable(size) # tabele diferite pentru impartirea cu semn // nu cred ca e necesara
 iModuloTable = createIModuloTable(size)
