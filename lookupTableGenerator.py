@@ -78,7 +78,7 @@ def createRightShiftTable(size: int):
     table=[[(i >> j)for j in range(size)]for i in range(size)]
     return table
 def createShiftCarryTable(size: int):
-    table = [[(i << j) >> 8 for j in range(size)] for i in range(size)]
+    table = [[((i << j) >> 8) & 0xFF for j in range(size)] for i in range(size)]
     return table
 def createJeTable(size: int):
     table = [[(1 if i==j else 0)for j in range(size)for i in range(size)]]
@@ -122,18 +122,18 @@ tables = [addTable, addCarryTable, subTable, subBorrowTable, mulLowerTable, mulH
 
 oneLineTables = [incTable, incCarryTable, decTable, decBorrowTable]
 
-memory = ""
+flat_list = []
 for table in tables:
-    memory += " "
-    memory += matrix_to_string(table)
-
+    for row in table:
+        flat_list.extend(row)
 for table in oneLineTables:
-    memory += " "
-    memory += list_to_string(table)
+    flat_list.extend(table)
 
-writeFile = open("./lookupTables.txt", "w")
-writeFile.write(memory)
-writeFile.close()
+# WRITE AS BINARY
+# We convert the list of ints into a "bytes" object
+with open("tables.bin", "wb") as f:
+    f.write(bytes(flat_list))
+
 # memoria o sa fie un string de forma " 0 1 2 3 4 5....", se potriveste initalizarii in .data
 
 
