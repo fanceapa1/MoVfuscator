@@ -1,6 +1,5 @@
 import re
 
-tables = open('lookupTables.txt', 'r')
 inputFile = open('in.S', 'r')
 outputFile = open('out.S', 'w')
 
@@ -44,7 +43,8 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
         code.append(f"movb {src_addr}+{i}, %ch")
         
         # rezultat in %al
-        code.append(f"movb {table_addr}(%ecx), %al")
+        offset = 720896
+        code.append(f"movb {table_addr} + {offset}(%ecx), %al")
         # salvam in registrul dest
 
         code.append(f"movb %al, {dest_addr}+{i}")
@@ -66,7 +66,6 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
 
 if __name__=="__main__":
     initializeMemory() # am facut-o functie separata fiindca poate o mai modificam
-    tables.close()
     for line in inputFile.readlines(): # bucla principala in care prelucram instructiunile
         if ".data" in line:
             continue
@@ -93,7 +92,7 @@ if __name__=="__main__":
             case 'xor':
                 param1 = line.split()[1][:-1]
                 param2 = line.split()[2]
-                outputFile.write(movfuscate_xor('0x08100000', param1, param2, 'backup_space'))
+                outputFile.write(movfuscate_xor('M', param1, param2, 'backup_space'))
             case _:
                 outputFile.write('de movfuscat\n')
 
