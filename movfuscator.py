@@ -64,6 +64,126 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     return "\n".join(code)
 
 
+def movfuscate_add(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+
+    if src_addr in "%eax%ebx%ecx%edx": 
+        code.append(f"movl {src_addr}, v_{src_addr[1:]}")
+        src_addr = f'v_{src_addr[1:]}'
+    if dest_addr in "%eax%ebx%ecx%edx":
+        code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
+        dest_addr = f'v_{dest_addr[1:]}'   
+    
+    code.append(f"movl %ecx, {backup_addr}")
+    code.append(f"movl %eax, {backup_addr}+4")
+    code.append(f"movl %ebx, {backup_addr}+8")
+    code.append(f"movl %edx, {backup_addr}+12")
+    
+    code.append("")
+    code.append("movl $0, %ebx") # ebx = carry
+
+    add_offset = 0
+    carry_offset = 65536
+
+    for i in range(4):
+        code.append("movl $0, %ecx")
+        code.append(f"movb {dest_addr}+{i}, %cl")
+        code.append(f"movb {src_addr}+{i}, %ch")
+        
+        code.append(f"movb {table_addr} + {add_offset}(%ecx), %al")
+        code.append(f"movb {table_addr} + {carry_offset}(%ecx), %dl")
+
+        # adaugam carry carry
+        code.append("movl $0, %ecx")
+        code.append("movb %bl, %cl") 
+        code.append("movb %al, %ch")
+        
+        code.append(f"movb {table_addr} + {add_offset}(%ecx), %al")
+        code.append(f"movb %al, {dest_addr}+{i}")
+
+        code.append(f"movb {table_addr} + {carry_offset}(%ecx), %dh")
+
+        code.append("movl $0, %ecx")
+        code.append("movb %dh, %cl")
+        code.append("movb %dl, %ch")
+        code.append(f"movb {table_addr} + {add_offset}(%ecx), %bl")
+
+        code.append("")
+
+    code.append(f"movl {backup_addr}, %ecx")
+    code.append(f"movl {backup_addr}+4, %eax")
+    code.append(f"movl {backup_addr}+8, %ebx")
+    code.append(f"movl {backup_addr}+12, %edx")
+
+    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+        code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
+    
+    code.append("")
+
+    return "\n".join(code)
+
+
+def movfuscate_sub(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+
+    # 1. Virtualizam registrii daca sunt folositi direct
+    if src_addr in "%eax%ebx%ecx%edx": 
+        code.append(f"movl {src_addr}, v_{src_addr[1:]}")
+        src_addr = f'v_{src_addr[1:]}'
+    if dest_addr in "%eax%ebx%ecx%edx":
+        code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
+        dest_addr = f'v_{dest_addr[1:]}'   
+    
+    # 2. Facem backup la TOTI registrii
+    code.append(f"movl %ecx, {backup_addr}")
+    code.append(f"movl %eax, {backup_addr}+4")
+    code.append(f"movl %ebx, {backup_addr}+8")
+    code.append(f"movl %edx, {backup_addr}+12")
+    
+    code.append("")
+    code.append("movl $0, %ebx")
+
+    sub_offset = 0x20000
+    borrow_offset = 0x30000
+    add_offset = 0
+
+    for i in range(4):
+        code.append("movl $0, %ecx")
+        code.append(f"movb {src_addr}+{i}, %cl")
+        code.append(f"movb {dest_addr}+{i}, %ch") 
+        
+        code.append(f"movb {table_addr} + {sub_offset}(%ecx), %al")  
+        code.append(f"movb {table_addr} + {borrow_offset}(%ecx), %dl") 
+
+        code.append("movl $0, %ecx")
+        code.append("movb %bl, %cl")  
+        code.append("movb %al, %ch")  
+        
+        code.append(f"movb {table_addr} + {sub_offset}(%ecx), %al")   
+        code.append(f"movb %al, {dest_addr}+{i}")                 
+
+        code.append(f"movb {table_addr} + {borrow_offset}(%ecx), %dh")
+
+        code.append("movl $0, %ecx")
+        code.append("movb %dh, %cl")
+        code.append("movb %dl, %ch")
+        code.append(f"movb {table_addr} + {add_offset}(%ecx), %bl")
+
+        code.append("")
+
+    code.append(f"movl {backup_addr}, %ecx")
+    code.append(f"movl {backup_addr}+4, %eax")
+    code.append(f"movl {backup_addr}+8, %ebx")
+    code.append(f"movl {backup_addr}+12, %edx")
+
+    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+        code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
+    
+    code.append("")
+
+    return "\n".join(code)
+
+
 if __name__=="__main__":
     initializeMemory() # am facut-o functie separata fiindca poate o mai modificam
     for line in inputFile.readlines(): # bucla principala in care prelucram instructiunile
@@ -90,9 +210,17 @@ if __name__=="__main__":
                 outputFile.write(line)
             ### CAZURI DE MOVFUSCAT
             case 'xor':
+                param1 = line.split()[1][:-1] # src
+                param2 = line.split()[2] # dest
+                outputFile.write(movfuscate_xor('M', param1, param2, 'backup_space'))
+            case 'add':
                 param1 = line.split()[1][:-1]
                 param2 = line.split()[2]
-                outputFile.write(movfuscate_xor('M', param1, param2, 'backup_space'))
+                outputFile.write(movfuscate_add('M', param1, param2, 'backup_space'))
+            case 'sub':
+                param1 = line.split()[1][:-1]
+                param2 = line.split()[2]
+                outputFile.write(movfuscate_sub('M', param1, param2, 'backup_space'))
             case _:
                 outputFile.write('de movfuscat\n')
 
