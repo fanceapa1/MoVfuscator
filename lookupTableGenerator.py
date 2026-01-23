@@ -129,8 +129,6 @@ for table in tables:
 for table in oneLineTables:
     flat_list.extend(table)
 
-# WRITE AS BINARY
-# We convert the list of ints into a "bytes" object
 with open("tables.bin", "wb") as f:
     f.write(bytes(flat_list))
 
