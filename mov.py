@@ -12,12 +12,6 @@ def liniarizeCode(inputText: str):
     adresa_curenta_alocare = 100
     output = ".data\n"
 
-    def print_reg_update(nume_reg, val_veche, val_noua):
-        if val_veche != val_noua:
-            print(f"   >>> [UPDATE] {nume_reg}: {val_veche} -> {val_noua}")
-        else:
-            print(f"   >>> [NO CHANGE] {nume_reg} a ramas {val_noua}")
-
     def parseaza_adresa(operand_string):
         continut = operand_string.replace('(', '').replace(')', '')
         componente = continut.split(',')
@@ -157,7 +151,6 @@ def liniarizeCode(inputText: str):
         if instructiune == "loop":
             old_ecx = registrii["%ecx"]
             registrii["%ecx"] -= 1
-            print_reg_update("%ecx", old_ecx, registrii["%ecx"]) 
             
             if registrii["%ecx"] != 0:
                 if op1 in etichete_linii:
@@ -171,7 +164,6 @@ def liniarizeCode(inputText: str):
             rez = val1 & val2
             flags["ZF"] = 1 if rez == 0 else 0
             flags["SF"] = 1 if rez < 0 else 0
-            print(f"TEST (Flags update): ZF={flags['ZF']}, SF={flags['SF']}")
 
         elif instructiune in ["div", "idiv"]:
             output += f'{linie}\n'
@@ -187,9 +179,6 @@ def liniarizeCode(inputText: str):
                 registrii["%eax"] = cat
                 registrii["%edx"] = rest
                 
-                print(f"DIV Executat:")
-                print_reg_update("%eax (cat)", old_eax, cat)
-                print_reg_update("%edx (rest)", old_edx, rest)
             else:
                 print("Eroare: Impartire la 0")
 
@@ -198,14 +187,11 @@ def liniarizeCode(inputText: str):
             val = get_valoare_operand(op1)
             if "(" in op2: 
                 memorie[parseaza_adresa(op2)] = val
-                print(f"   >>> [MEM WRITE] Adresa {parseaza_adresa(op2)} <- {val}")
             elif op2 in registrii: 
                 old = registrii[op2]
                 registrii[op2] = val
-                print_reg_update(op2, old, val)
             elif op2 in variabile:
                 memorie[variabile[op2]["addr"]] = val
-                print(f"   >>> [VAR WRITE] {op2} <- {val}")
 
         elif instructiune == "sub":
             output += f'{linie}\n'
@@ -213,7 +199,6 @@ def liniarizeCode(inputText: str):
             if op2 in registrii: 
                 old = registrii[op2]
                 registrii[op2] -= val
-                print_reg_update(op2, old, registrii[op2])
 
         elif instructiune == "add":
             output += f'{linie}\n'
@@ -221,7 +206,6 @@ def liniarizeCode(inputText: str):
             if op2 in registrii: 
                 old = registrii[op2]
                 registrii[op2] += val
-                print_reg_update(op2, old, registrii[op2])
 
         elif instructiune == "xor":
             output += f'{linie}\n'
@@ -231,7 +215,6 @@ def liniarizeCode(inputText: str):
                 res = registrii[op2] ^ val
                 registrii[op2] = res
                 flags["ZF"] = 1 if res == 0 else 0
-                print_reg_update(op2, old, res)
 
         i += 1
 

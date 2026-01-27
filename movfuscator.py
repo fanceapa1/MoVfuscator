@@ -222,7 +222,10 @@ def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
 
 if __name__=="__main__":
     initializeMemory()
-    for line in inputFile.readlines():
+    linearInput = liniarizeCode(inputFile.readlines())
+    print(linearInput)
+    for line in linearInput.split('\n'):
+        line += '\n'
         if ".data" in line:
             continue
         if re.match(r'^\s*[a-zA-Z_][a-zA-Z0-9_]*:\s*\.[a-zA-Z]+\s+.*$', line):
