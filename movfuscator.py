@@ -1,4 +1,5 @@
 import re
+from mov import liniarizeCode
 
 inputFile = open('in.S', 'r')
 outputFile = open('out.S', 'w')
