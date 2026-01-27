@@ -1,5 +1,8 @@
 in.S
 out.S
+input.S
+output.S
+output
 in
 out
 __pycache__/
