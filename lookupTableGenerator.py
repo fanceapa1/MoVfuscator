@@ -92,6 +92,9 @@ def createJleTable(size: int):
 def createJaTable(size: int):
     table = [[(1 if i > j else 0)for j in range(size)for i in range(size)]]
     return table
+def createOrTable(size: int):
+    table = [[((i | j)) for j in range(size)] for i in range(size)]
+    return table
 
 size = 256
 
@@ -116,9 +119,10 @@ rightShiftTable = createRightShiftTable(size)
 shiftCarryTable = createShiftCarryTable(size)
 jeTable = createJeTable(size)
 jaTable = createJaTable(size)
+orTable = createOrTable(size)
 
 tables = [addTable, addCarryTable, subTable, subBorrowTable, mulLowerTable, mulHigherTable, imulHigherTable, divTable,
-        moduloTable, iDivTable, iModuloTable, xorTable, leftShiftTable, rightShiftTable, shiftCarryTable, jeTable, jaTable]
+        moduloTable, iDivTable, iModuloTable, xorTable, leftShiftTable, rightShiftTable, shiftCarryTable, jeTable, jaTable, orTable]
 
 oneLineTables = [incTable, incCarryTable, decTable, decBorrowTable]
 

@@ -53,6 +53,46 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     code.append("")
     return "\n".join(code)
 
+def movfuscate_or(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl {src_addr}, v_{src_addr[1:]}")
+        src_addr = f'v_{src_addr[1:]}'
+    elif src_addr.startswith('$'):
+        code.append(f"movl {src_addr}, v_src")
+        src_addr = "v_src"
+    else:
+        code.append(f"movl {src_addr}, %ecx")
+        code.append("movl %ecx, v_src")
+        src_addr = "v_src"
+
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
+        dest_addr = f'v_{dest_addr[1:]}'   
+
+    code.append(f"movl %ecx, {backup_addr}")
+    code.append(f"movl %eax, {backup_addr}+4")
+    code.append("")
+
+    or_offset = 0x110000 
+
+    for i in range(4):
+        code.append(f"movl $0, %ecx")
+        code.append(f"movb {dest_addr}+{i}, %cl")
+        code.append(f"movb {src_addr}+{i}, %ch")
+        code.append(f"movb {table_addr} + {or_offset}(%ecx), %al")
+        code.append(f"movb %al, {dest_addr}+{i}")
+        code.append("")
+
+    code.append(f"movl {backup_addr}, %ecx")
+    code.append(f"movl {backup_addr}+4, %eax")
+
+    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+        code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
+    code.append("")
+    return "\n".join(code)
+
 def movfuscate_add(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
     code = []
     
@@ -385,6 +425,10 @@ if __name__=="__main__":
                 param1 = parts[1][:-1].strip()
                 param2 = parts[2].strip()
                 outputFile.write(movfuscate_xor('M', param1, param2, 'backup_space'))
+            case 'or' | 'orl':
+                param1 = parts[1][:-1].strip()
+                param2 = parts[2].strip()
+                outputFile.write(movfuscate_or('M', param1, param2, 'backup_space'))
             case 'add' | 'addl':
                 param1 = parts[1][:-1].strip()
                 param2 = parts[2].strip()
