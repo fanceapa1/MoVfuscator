@@ -41,7 +41,7 @@ independent de MOVfuscator.
 
 Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
 
-| movcc prime.c -o prime                     |
+| LookUpTable                     |
 |:------------------------------------------:|
 | ![LookUpTable](https://github.com/user-attachments/assets/0c3a5059-0768-4ae4-a33a-063d0e7043ac)         |
  
