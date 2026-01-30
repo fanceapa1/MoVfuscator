@@ -24,10 +24,10 @@ Pentru a verifica daca MOVfuscatorul functioneaza, puteti folosi un cod din aces
 
 # Limite
 Programul nu stie sa inlocuiasca instructiunea "call".
-
 Procedurile care pot fi chemate trebuie sa fie functii din C ( exemplu: printf, scanf ).
 
-
+Avand in vedere numarul ridicat de instructiuni "mov" necesare pentru a face o simpla operatie, pentru un cod assembly cu sute de linii o sa returneze unul cu
+zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
 
 # Echipa
 Mosul Tudor
