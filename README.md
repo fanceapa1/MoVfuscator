@@ -29,8 +29,7 @@ Functiile predefinite functioneaza prin utilizarea unor lookup table-uri. Aceste
 valorile potrivite. Noul cod assembly se foloseste de aceste valori pentru a creea o replica a fiecarei linii de cod din input, cu scopul de a functiona 
 independent de MOVfuscator.
 
-Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul: 
-> lookupTableGenerator.py
+Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
 
 
 # Testare
@@ -46,7 +45,12 @@ Sau puteti folosi aceste link-uri:
 
 # Limite
 Programul nu stie sa inlocuiasca instructiunea "call".
+
 Procedurile care pot fi chemate trebuie sa fie functii din C ( exemplu: printf, scanf ).
+
+Etichetele originale ( in afara de cea de final ) sunt sterse. Prin urmare, ele trebuie sa fie adaugate manual pentru debugging.
+
+Input-ul trebuie sa aiba un format specific ( nu au voie sa lipseasca liniile .data si .text ).
 
 Avand in vedere numarul ridicat de instructiuni "mov" necesare pentru a face o simpla operatie, pentru un cod assembly cu sute de linii o sa returneze unul cu
 zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
