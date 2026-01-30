@@ -34,7 +34,7 @@ Avand in vedere numarul ridicat de instructiuni "mov" necesare pentru a face o s
 zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
 
 # Referinte
-Ideea programului a fost preluata de la Christopher Doman [The movfuscator](https://www.youtube.com/watch?v=hsNDLVUzYEs).
+Ideea programului a fost preluata de la Christopher Domas [The movfuscator](https://www.youtube.com/watch?v=hsNDLVUzYEs).
 
 # Echipa
 Mosul Tudor
