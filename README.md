@@ -31,7 +31,10 @@ zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
 
 # Echipa
 Mosul Tudor
+
 Nechifor Stefan-Alexandru
+
 Simzianu Teodora
+
 Teodorescu Nicolas-Alexandru
 
