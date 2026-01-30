@@ -39,13 +39,11 @@ Functiile predefinite functioneaza prin utilizarea unor lookup table-uri. Aceste
 valorile potrivite. Noul cod assembly se foloseste de aceste valori pentru a creea o replica a fiecarei linii de cod din input, cu scopul de a functiona 
 independent de MOVfuscator.
 
-Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
-
 | LookUpTable                     |
 |:------------------------------------------:|
 | ![LookUpTable](https://github.com/user-attachments/assets/0c3a5059-0768-4ae4-a33a-063d0e7043ac)         |
  
-
+Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
 
 # Testare
 Pentru a verifica daca MOVfuscatorul functioneaza, puteti descarca cateva coduri urmand folder-ele astfel:
