@@ -56,7 +56,6 @@ def liniarizeCode(inputText: str):
 
     code_baza = inputText
 
-    # Indexare Etichete
     for idx, linie in enumerate(code_baza):
         l = linie.strip()
         if l.endswith(":"): etichete_linii[l[:-1]] = idx
@@ -114,6 +113,7 @@ def liniarizeCode(inputText: str):
                                 adresa_curenta_alocare += pas
                 i += 1
             continue
+        if linie.split()[0] == '.extern': output += f"{linie}\n"
 
         if linie in [".text", ".global main"] or linie.endswith(":"):
             if linie == ".text": output += ".text\n"
@@ -179,7 +179,7 @@ def liniarizeCode(inputText: str):
                 registrii["%edx"] = rest
                 
             else:
-                print("Eroare: Impartire la 0")
+                print("error: division by 0")
 
         elif instructiune == "mov":
             output += f'{linie}\n'
@@ -227,7 +227,6 @@ def liniarizeCode(inputText: str):
         elif instructiune == "mul":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
-            # mul calculates EDX:EAX = EAX * operand
             old_eax = registrii["%eax"]
             res = old_eax * val
             registrii["%eax"] = res & 0xFFFFFFFF
@@ -246,6 +245,35 @@ def liniarizeCode(inputText: str):
             if op2 in registrii:
                 old = registrii[op2]
                 registrii[op2] >>= val
+
+        elif instructiune == "inc":
+            output += f'{linie}\n'
+            if op1 in registrii:
+                registrii[op1] += 1
+
+        elif instructiune == "dec":
+            output += f'{linie}\n'
+            if op1 in registrii:
+                registrii[op1] -= 1
+
+        elif instructiune == "lea":
+            output += f'{linie}\n'
+            if op1 in variabile:
+                registrii[op2] = variabile[op1]["addr"]
+            elif "(" in op1:
+                addr = parseaza_adresa(op1)
+                registrii[op2] = addr
+
+        elif instructiune == "push":
+            output += f'{linie}\n'
+            registrii["%esp"] -= 4
+
+        elif instructiune == "pop":
+            output += f'{linie}\n'
+            registrii["%esp"] += 4
+
+        elif instructiune == "call":
+            output += f'{linie}\n'
 
         i += 1
 

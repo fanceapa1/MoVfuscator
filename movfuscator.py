@@ -9,6 +9,7 @@ def initializeMemory():
     outputFile.write('M: .incbin "tables.bin"')
     outputFile.write("\nbackup_space: .space 16\n")
     outputFile.write("v_eax: .space 4\nv_ebx: .space 4\nv_ecx: .space 4\nv_edx: .space 4\n")
+    outputFile.write("v_esp: .space 4\nv_esi: .space 4\n")
     outputFile.write("v_src: .space 4\n")
     outputFile.write("v_dest: .space 4\n")
     outputFile.write("v_val: .space 4\n")
@@ -20,14 +21,14 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
         return f'mov $0, {dest_addr}\n'
     code = []
     
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {src_addr}, v_{src_addr[1:]}")
         src_addr = f'v_{src_addr[1:]}'
     elif src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
         src_addr = "v_src"
 
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
         dest_addr = f'v_{dest_addr[1:]}'   
     
@@ -48,7 +49,7 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     code.append(f"movl {backup_addr}, %ecx")
     code.append(f"movl {backup_addr}+4, %eax")
 
-    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+    if dest_addr in "v_eax v_ebx v_ecx v_edx v_esp v_esi":
         code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
     code.append("")
     return "\n".join(code)
@@ -56,7 +57,7 @@ def movfuscate_xor(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
 def movfuscate_or(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
     code = []
 
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {src_addr}, v_{src_addr[1:]}")
         src_addr = f'v_{src_addr[1:]}'
     elif src_addr.startswith('$'):
@@ -67,7 +68,7 @@ def movfuscate_or(table_addr: str, src_addr: str, dest_addr: str, backup_addr: s
         code.append("movl %ecx, v_src")
         src_addr = "v_src"
 
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
         dest_addr = f'v_{dest_addr[1:]}'   
 
@@ -88,7 +89,7 @@ def movfuscate_or(table_addr: str, src_addr: str, dest_addr: str, backup_addr: s
     code.append(f"movl {backup_addr}, %ecx")
     code.append(f"movl {backup_addr}+4, %eax")
 
-    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+    if dest_addr in "v_eax v_ebx v_ecx v_edx v_esp v_esi":
         code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
     code.append("")
     return "\n".join(code)
@@ -96,14 +97,14 @@ def movfuscate_or(table_addr: str, src_addr: str, dest_addr: str, backup_addr: s
 def movfuscate_add(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
     code = []
     
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]: 
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]: 
         code.append(f"movl {src_addr}, v_{src_addr[1:]}")
         src_addr = f'v_{src_addr[1:]}'
     elif src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
         src_addr = "v_src"
     
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
         dest_addr = f'v_{dest_addr[1:]}'   
     
@@ -145,7 +146,7 @@ def movfuscate_add(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     code.append(f"movl {backup_addr}+8, %ebx")
     code.append(f"movl {backup_addr}+12, %edx")
 
-    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+    if dest_addr in "v_eax v_ebx v_ecx v_edx v_esp v_esi":
         code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
     code.append("")
     return "\n".join(code)
@@ -153,14 +154,14 @@ def movfuscate_add(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
 def movfuscate_sub(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
     code = []
     
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]: 
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]: 
         code.append(f"movl {src_addr}, v_{src_addr[1:]}")
         src_addr = f'v_{src_addr[1:]}'
     elif src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
         src_addr = "v_src"
 
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_{dest_addr[1:]}") 
         dest_addr = f'v_{dest_addr[1:]}'   
     
@@ -201,7 +202,7 @@ def movfuscate_sub(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     code.append(f"movl {backup_addr}+8, %ebx")
     code.append(f"movl {backup_addr}+12, %edx")
 
-    if dest_addr in "v_eax v_ebx v_ecx v_edx":
+    if dest_addr in "v_eax v_ebx v_ecx v_edx v_esp v_esi":
         code.append(f"movl {dest_addr}, %{dest_addr[2:]}")
     code.append("")
     return "\n".join(code)
@@ -212,7 +213,7 @@ def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
 
     if src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
-    elif src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    elif src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {src_addr}, v_src")
     else:
         code.append(f"movl {src_addr}, %ecx")
@@ -261,7 +262,7 @@ def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
 def movfuscate_div(table_addr: str, src_addr: str, backup_addr: str):
     code = []
 
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {src_addr}, v_src")
     elif src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
@@ -314,7 +315,7 @@ def movfuscate_shl(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
         code.append("eroare shl\n")
         return
 
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_val")
     else:
         code.append(f"movl {dest_addr}, %ecx") 
@@ -352,7 +353,7 @@ def movfuscate_shl(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
                 code.append(movfuscate_add(table_addr, "v_temp", "v_res", backup_addr))
 
     code.append(f"movl v_res, %eax")
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl %eax, {dest_addr}")
     else:
         code.append(f"movl %eax, {dest_addr}")
@@ -372,7 +373,7 @@ def movfuscate_shr(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
         code.append("eroare shr\n")
         return
 
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_val")
     else:
         code.append(f"movl {dest_addr}, %ecx")
@@ -392,12 +393,126 @@ def movfuscate_shr(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
     code.append("movb %al, v_eax")
 
     code.append("movl v_eax, %eax")
-    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl %eax, {dest_addr}")
     else:
         code.append(f"movl %eax, {dest_addr}")
     
     code.append("")
+    return "\n".join(code)
+
+def movfuscate_inc(table_addr: str, op_addr: str, backup_addr: str):
+    code = []
+
+    if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
+        code.append(f"movl {op_addr}, v_{op_addr[1:]}")
+        dest_addr = f"v_{op_addr[1:]}"
+    else:
+        code.append(f"movl {op_addr}, v_dest")
+        dest_addr = "v_dest"
+
+    code.append(f"movl %ecx, {backup_addr}")
+    code.append(f"movl %eax, {backup_addr}+4")
+    code.append(f"movl %ebx, {backup_addr}+8")
+    
+    inc_offset = 0x120000
+    carry_offset = 0x120100
+    add_offset = 0
+    add_carry_offset = 0x10000
+
+    code.append("movl $0, %ecx")
+    code.append(f"movb {dest_addr}+0, %cl")
+    
+    code.append(f"movb {table_addr} + {inc_offset}(%ecx), %al")
+    code.append(f"movb {table_addr} + {carry_offset}(%ecx), %bl")
+    
+    code.append(f"movb %al, {dest_addr}+0")
+
+    for i in range(1, 4):
+        code.append("movl $0, %ecx")
+        code.append(f"movb {dest_addr}+{i}, %ch")
+        code.append("movb %bl, %cl")
+
+        code.append(f"movb {table_addr} + {add_offset}(%ecx), %al")
+        code.append(f"movb {table_addr} + {add_carry_offset}(%ecx), %dl")
+        
+        code.append(f"movb %al, {dest_addr}+{i}")
+        code.append("movb %dl, %bl")
+
+    code.append(f"movl {backup_addr}, %ecx")
+    code.append(f"movl {backup_addr}+4, %eax")
+    code.append(f"movl {backup_addr}+8, %ebx")
+
+    if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
+        code.append(f"movl {dest_addr}, {op_addr}")
+    else:
+        code.append(f"movl {dest_addr}, {op_addr}")
+
+    code.append("")
+    return "\n".join(code)
+
+def movfuscate_dec(table_addr: str, op_addr: str, backup_addr: str):
+    code = []
+    
+    if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
+        code.append(f"movl {op_addr}, v_{op_addr[1:]}")
+        dest_addr = f"v_{op_addr[1:]}"
+    else:
+        code.append(f"movl {op_addr}, v_dest")
+        dest_addr = "v_dest"
+
+    code.append(f"movl %ecx, {backup_addr}")
+    code.append(f"movl %eax, {backup_addr}+4")
+    code.append(f"movl %ebx, {backup_addr}+8")
+
+    dec_offset = 0x120200
+    borrow_offset = 0x120300
+    sub_offset = 0x20000
+    sub_borrow_offset = 0x30000
+    
+    code.append("movl $0, %ecx")
+    code.append(f"movb {dest_addr}+0, %cl")
+    
+    code.append(f"movb {table_addr} + {dec_offset}(%ecx), %al")
+    code.append(f"movb {table_addr} + {borrow_offset}(%ecx), %bl")
+    
+    code.append(f"movb %al, {dest_addr}+0")
+    
+    for i in range(1, 4):
+        code.append("movl $0, %ecx")
+        code.append(f"movb {dest_addr}+{i}, %ch")
+        code.append("movb %bl, %cl")
+
+        code.append(f"movb {table_addr} + {sub_offset}(%ecx), %al")
+        code.append(f"movb {table_addr} + {sub_borrow_offset}(%ecx), %dl")
+        
+        code.append(f"movb %al, {dest_addr}+{i}")
+        code.append("movb %dl, %bl")
+
+    code.append(f"movl {backup_addr}, %ecx")
+    code.append(f"movl {backup_addr}+4, %eax")
+    code.append(f"movl {backup_addr}+8, %ebx")
+
+    if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
+        code.append(f"movl {dest_addr}, {op_addr}")
+    else:
+        code.append(f"movl {dest_addr}, {op_addr}")
+
+    code.append("")
+    return "\n".join(code)
+
+def movfuscate_lea(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+    
+    val_str = f"${src_addr}"
+    
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
+        code.append(f"movl {val_str}, v_{dest_addr[1:]}")
+        code.append(f"movl {val_str}, {dest_addr}")
+    else:
+        code.append(f"movl {val_str}, {dest_addr}")
+        
+    code.append("")    
     return "\n".join(code)
 
 if __name__=="__main__":
@@ -451,8 +566,18 @@ if __name__=="__main__":
                 param1 = parts[1][:-1].strip()
                 param2 = parts[2].strip()
                 outputFile.write(movfuscate_shr('M', param1, param2, 'backup_space'))
+            case 'inc' | 'incl':
+                param1 = parts[1].strip()
+                outputFile.write(movfuscate_inc('M', param1, 'backup_space'))
+            case 'dec' | 'decl':
+                param1 = parts[1].strip()
+                outputFile.write(movfuscate_dec('M', param1, 'backup_space'))
+            case 'lea' | 'leal':
+                param1 = parts[1][:-1].strip()
+                param2 = parts[2].strip()
+                outputFile.write(movfuscate_lea('M', param1, param2, 'backup_space'))
             case _:
-                outputFile.write(f'{line} # de movfuscat')
+                outputFile.write(f'{line[:-1]} # de movfuscat\n')
 
 inputFile.close()
 outputFile.close()
