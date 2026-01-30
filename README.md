@@ -13,6 +13,10 @@
 # Descriere
 [MOVfuscator-ul](https://movfuscator.onrender.com/) este un program care transforma un cod clasic de Assembly x86 ( pe 32 de biti ), intr-un program format exclusiv din instructiuni "mov".
 
+| Interfata                     |
+|:------------------------------------------:|
+| <img width="1545" height="665" alt="MovFuscator" src="https://github.com/user-attachments/assets/7ea9ffc7-aad3-4459-9daf-abb0558914a9" />         |
+
 Acesta primeste un fisier ( al carui continut este codul Assembly ) si returneaza intr-un alt fisier noul cod.
 El nu este gandit pentru a face un cod "mai eficient", ci doar pentru a inlocui toate instructiunile cu MOV-uri.
 
