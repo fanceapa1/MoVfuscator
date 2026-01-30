@@ -1,7 +1,7 @@
 # MoVfuscator
 
 # Descriere
-MOVfuscator-ul este un program care transforma un cod clasic de Assembly x86 ( pe 32 de biti ), intr-un program format exclusiv din instructiuni "mov".
+[MOVfuscator-ul](https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Proiect%200x00%202025.pdf) este un program care transforma un cod clasic de Assembly x86 ( pe 32 de biti ), intr-un program format exclusiv din instructiuni "mov".
 
 Acesta primeste un fisier ( al carui continut este codul Assembly ) si returneaza intr-un alt fisier noul cod.
 Este capabil de a reproduce instructiunile urmatoare: inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl, lea, push, pop, cmp, loop si jump-uri).
