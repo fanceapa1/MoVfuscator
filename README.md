@@ -8,13 +8,13 @@ El nu este gandit pentru a face un cod "mai eficient", ci doar pentru a inlocui 
 
 Este capabil de a reproduce instructiunile urmatoare: 
 
-Operatii
+- Operatii
 > inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl
 
-Utilizarea stivei
+- Utilizarea stivei
 > lea, push, pop
 
-Conditii si bucle
+- Conditii si bucle
 > cmp, loop, jump-uri.
 
 # Cum functioneaza
