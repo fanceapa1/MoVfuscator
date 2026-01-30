@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movfuscator Web Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-columns">
+            <div class="column input-column">
+                <h2>Input</h2>
+                <textarea 
+                    id="inputEditor" 
+                    class="code-box" 
+                    placeholder="paste code here...."
+                    spellcheck="false"
+                ></textarea>
+                <div class="upload-section">
+                    <span>or </span>
+                    <label for="fileInput" class="upload-link">UPLOAD FILE (.S/ .asm)</label>
+                    <input type="file" id="fileInput" class="hidden-file-input" accept=".S,.s,.asm">
+                </div>
+            </div>
+
+            <div class="column button-column">
+                <button id="convertBtn" class="movfuscate-btn">MOVFUSCATE</button>
+            </div>
+
+            <div class="column output-column">
+                <h2>Output</h2>
+                <textarea 
+                    id="outputEditor" 
+                    class="code-box output-box" 
+                    readonly
+                    placeholder=""
+                    spellcheck="false"
+                ></textarea>
+                
+                <div class="download-section">
+                    <button id="downloadBtn" class="download-link" disabled>⬇ DOWNLOAD OUT.S</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorLogContainer" class="error-log-container">
+        <div class="error-log-header">ERROR LOG</div>
+        <div id="errorLogContent" class="error-log-content"></div>
+        <button class="close-log" onclick="hideError()">×</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
