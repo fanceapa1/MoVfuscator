@@ -16,7 +16,11 @@ utilizand functiile predefinite, executa calculele si scrie in fisierul de outpu
 cunoaste situatia in care se afla variabilele din asssembly si va decide daca bucla continua sau este intrerupta.
 
 # Testare
-Pentru a verifica daca MOVfuscatorul functioneaza, puteti folosi un cod din aceste pdf-uri:
+Pentru a verifica daca MOVfuscatorul functioneaza, puteti descarca cateva coduri urmand folder-ele astfel:
+
+    tests - > probleme movfuscator - > 0x02 sau 0x04
+
+Sau puteti folosi aceste link-uri:
 ######
     https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x02.pdf
 ######
