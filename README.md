@@ -24,7 +24,10 @@ Pentru a verifica daca MOVfuscatorul functioneaza, puteti folosi un cod din aces
 
 # Limite
 Programul nu stie sa inlocuiasca instructiunea "call".
+
 Procedurile care pot fi chemate trebuie sa fie functii din C ( exemplu: printf, scanf ).
+
+
 
 # Echipa
 Mosul Tudor
