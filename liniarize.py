@@ -148,7 +148,8 @@ def liniarizeCode(inputText: str):
 
 
         if instructiune == "loop":
-            old_ecx = registrii["%ecx"]
+            output += "sub $1, %ecx\n"
+
             registrii["%ecx"] -= 1
             
             if registrii["%ecx"] != 0:
@@ -157,7 +158,6 @@ def liniarizeCode(inputText: str):
                     continue
 
         elif instructiune == "test":
-            output += f'{linie}\n'
             val1 = get_valoare_operand(op1)
             val2 = get_valoare_operand(op2)
             rez = val1 & val2
@@ -165,20 +165,21 @@ def liniarizeCode(inputText: str):
             flags["SF"] = 1 if rez < 0 else 0
 
         elif instructiune == "cmp":
-            # Compare does NOT output line; it only sets internal flags for the next jump
             v1, v2 = get_valoare_operand(op1), get_valoare_operand(op2)
-            rez = v2 - v1
-            flags["ZF"] = 1 if rez == 0 else 0
-            flags["SF"] = 1 if rez < 0 else 0
 
-        elif instructiune in ["jmp", "ja", "jb", "jg", "jle", "je", "jne", "jz", "jnz"]:
-            # Jumps do NOT output line; they change the execution index 'i'
+            rez = (v2 - v1) & 0xFFFFFFFF
+            
+            flags["ZF"] = 1 if rez == 0 else 0
+            flags["SF"] = 1 if (rez & 0x80000000) else 0
+
+        elif instructiune in ["jmp", "ja", "jb", "jg", "jle", "jge", "je", "jne", "jz", "jnz"]:
             should_jump = False
             if instructiune == "jmp": should_jump = True
             elif instructiune == "ja": should_jump = (flags["SF"] == 0 and flags["ZF"] == 0)
             elif instructiune == "jb": should_jump = (flags["SF"] == 1)
             elif instructiune == "jg": should_jump = (flags["SF"] == 0 and flags["ZF"] == 0)
             elif instructiune == "jle": should_jump = (flags["SF"] == 1 or flags["ZF"] == 1)
+            elif instructiune == "jge": should_jump = (flags["SF"] == 0)
             elif instructiune in ["je", "jz"]: should_jump = (flags["ZF"] == 1)
             elif instructiune in ["jne", "jnz"]: should_jump = (flags["ZF"] == 0)
 
@@ -249,7 +250,6 @@ def liniarizeCode(inputText: str):
         elif instructiune == "mul" or instructiune == "mull":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
-            # mul calculates EDX:EAX = EAX * operand
             old_eax = registrii["%eax"]
             res = old_eax * val
             registrii["%eax"] = res & 0xFFFFFFFF
