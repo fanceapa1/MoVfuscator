@@ -1,0 +1,30 @@
+.data
+M: .incbin "tables.bin"
+backup_space: .space 16
+v_eax: .space 4
+v_ebx: .space 4
+v_ecx: .space 4
+v_edx: .space 4
+v_esp: .space 4
+v_esi: .space 4
+v_src: .space 4
+v_dest: .space 4
+v_val: .space 4
+v_res: .space 4
+v_temp: .space 4
+v_mul_src: .space 4
+x1: .ascii "maria"
+x2: .long 0x61676362
+x3: .ascii "maria2"
+.text
+.global main
+main:
+mov $4, %eax
+mov $1, %ebx
+mov $x1, %ecx
+mov $14, %edx
+int $0x80
+end:
+movl $1, %eax
+mov $0, %ebx
+int $0x80
