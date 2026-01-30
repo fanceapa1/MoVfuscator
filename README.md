@@ -10,8 +10,10 @@ Este capabil de a reproduce instructiunile urmatoare:
 
 Operatii
 > inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl
+
 Utilizarea stivei
 > lea, push, pop
+
 Conditii si bucle
 > cmp, loop, jump-uri.
 
