@@ -4,7 +4,8 @@
 MOVfuscator-ul este un program care transforma un cod clasic de Assembly x86 ( pe 32 de biti ), intr-un program format exclusiv din instructiuni "mov".
 
 Acesta primeste un fisier ( al carui continut este codul Assembly ) si returneaza intr-un alt fisier noul cod.
-Este capabil de a reproduce instructiunile urmatoare: > inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl, lea, push, pop, cmp, loop si jump-uri.
+Este capabil de a reproduce instructiunile urmatoare: 
+> inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl, lea, push, pop, cmp, loop si jump-uri.
 El nu este gandit pentru a face un cod "mai eficient", ci doar pentru a inlocui toate instructiunile cu MOV-uri.
 
 # Cum functioneaza
@@ -19,7 +20,8 @@ Functiile predefinite functioneaza prin utilizarea unor lookup table-uri. Aceste
 valorile potrivite. Noul cod assembly se foloseste de aceste valori pentru a creea o replica a fiecarei linii de cod din input, cu scopul de a functiona 
 independent de MOVfuscator.
 
-Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul: > lookupTableGenerator.py
+Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul: 
+> lookupTableGenerator.py
 
 
 # Testare
