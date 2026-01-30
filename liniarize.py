@@ -56,6 +56,7 @@ def liniarizeCode(inputText: str):
 
     code_baza = inputText
 
+    # Indexare Etichete
     for idx, linie in enumerate(code_baza):
         l = linie.strip()
         if l.endswith(":"): etichete_linii[l[:-1]] = idx
@@ -113,11 +114,10 @@ def liniarizeCode(inputText: str):
                                 adresa_curenta_alocare += pas
                 i += 1
             continue
-        if linie.split()[0] == '.extern': output += f"{linie}\n"
 
         if linie in [".text", ".global main"] or linie.endswith(":"):
             if linie == ".text": output += ".text\n"
-            elif linie in [".global main", "main:", "exit:", "et_exit:", "end:"]: output += f"{linie}\n"
+            elif linie in [".global main", "main:", "exit:", "et_exit:", "end:", "etexit:"]: output += f"{linie}\n"
             elif linie.endswith(":"): pass
             i += 1
             continue
@@ -164,6 +164,28 @@ def liniarizeCode(inputText: str):
             flags["ZF"] = 1 if rez == 0 else 0
             flags["SF"] = 1 if rez < 0 else 0
 
+        elif instructiune == "cmp":
+            # Compare does NOT output line; it only sets internal flags for the next jump
+            v1, v2 = get_valoare_operand(op1), get_valoare_operand(op2)
+            rez = v2 - v1
+            flags["ZF"] = 1 if rez == 0 else 0
+            flags["SF"] = 1 if rez < 0 else 0
+
+        elif instructiune in ["jmp", "ja", "jb", "jg", "jle", "je", "jne", "jz", "jnz"]:
+            # Jumps do NOT output line; they change the execution index 'i'
+            should_jump = False
+            if instructiune == "jmp": should_jump = True
+            elif instructiune == "ja": should_jump = (flags["SF"] == 0 and flags["ZF"] == 0)
+            elif instructiune == "jb": should_jump = (flags["SF"] == 1)
+            elif instructiune == "jg": should_jump = (flags["SF"] == 0 and flags["ZF"] == 0)
+            elif instructiune == "jle": should_jump = (flags["SF"] == 1 or flags["ZF"] == 1)
+            elif instructiune in ["je", "jz"]: should_jump = (flags["ZF"] == 1)
+            elif instructiune in ["jne", "jnz"]: should_jump = (flags["ZF"] == 0)
+
+            if should_jump and op1 in etichete_linii:
+                i = etichete_linii[op1]
+                continue
+
         elif instructiune in ["div", "idiv"]:
             output += f'{linie}\n'
             impartitor = get_valoare_operand(op1)
@@ -179,9 +201,9 @@ def liniarizeCode(inputText: str):
                 registrii["%edx"] = rest
                 
             else:
-                print("error: division by 0")
+                print("Eroare: Impartire la 0")
 
-        elif instructiune == "mov":
+        elif instructiune == "mov" or instructiune == "movl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if "(" in op2: 
@@ -192,21 +214,21 @@ def liniarizeCode(inputText: str):
             elif op2 in variabile:
                 memorie[variabile[op2]["addr"]] = val
 
-        elif instructiune == "sub":
+        elif instructiune == "sub" or instructiune == "subl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii: 
                 old = registrii[op2]
                 registrii[op2] -= val
 
-        elif instructiune == "add":
+        elif instructiune == "add" or instructiune == "addl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii: 
                 old = registrii[op2]
                 registrii[op2] += val
 
-        elif instructiune == "xor":
+        elif instructiune == "xor" or instructiune == "xorl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii:
@@ -215,7 +237,7 @@ def liniarizeCode(inputText: str):
                 registrii[op2] = res
                 flags["ZF"] = 1 if res == 0 else 0
 
-        elif instructiune == "or":
+        elif instructiune == "or" or instructiune == "orl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii:
@@ -224,34 +246,35 @@ def liniarizeCode(inputText: str):
                 registrii[op2] = res
                 flags["ZF"] = 1 if res == 0 else 0
 
-        elif instructiune == "mul":
+        elif instructiune == "mul" or instructiune == "mull":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
+            # mul calculates EDX:EAX = EAX * operand
             old_eax = registrii["%eax"]
             res = old_eax * val
             registrii["%eax"] = res & 0xFFFFFFFF
             registrii["%edx"] = (res >> 32) & 0xFFFFFFFF
 
-        elif instructiune == "shl":
+        elif instructiune == "shl" or instructiune == "shll":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii:
                 old = registrii[op2]
                 registrii[op2] <<= val
 
-        elif instructiune == "shr":
+        elif instructiune == "shr" or instructiune == "shrl":
             output += f'{linie}\n'
             val = get_valoare_operand(op1)
             if op2 in registrii:
                 old = registrii[op2]
                 registrii[op2] >>= val
 
-        elif instructiune == "inc":
+        elif instructiune == "inc" or instructiune == "incl":
             output += f'{linie}\n'
             if op1 in registrii:
                 registrii[op1] += 1
 
-        elif instructiune == "dec":
+        elif instructiune == "dec" or instructiune == "decl":
             output += f'{linie}\n'
             if op1 in registrii:
                 registrii[op1] -= 1
