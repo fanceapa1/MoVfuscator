@@ -23,7 +23,6 @@ def _load_to_virtual(code, addr, virtual_reg):
     elif addr.startswith('$'):
         code.append(f"movl {addr}, {virtual_reg}")
     else:
-        # Memory to Memory requires a register bridge. We use %ecx (it's backed up).
         code.append(f"movl {addr}, %ecx")
         code.append(f"movl %ecx, {virtual_reg}")
 
@@ -189,17 +188,13 @@ def movfuscate_sub(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
 def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
     code = []
     
-    code.append("movl %eax, v_val") # EAX is implicit dest for MUL
+    code.append("movl %eax, v_val")
     
     if src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
     elif src_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {src_addr}, v_src")
     else:
-        # Use existing register (e.g., %ecx) as temp since we are about to overwrite it anyway or back it up
-        # Ideally, we should be safe. backup_addr not used yet.
-        # But movfuscate_add *will* use backup.
-        # Let's use stack push/pop or just %ecx since movfuscate_mul logic handles regs.
         code.append(f"movl {src_addr}, %ecx")
         code.append("movl %ecx, v_src")
 
@@ -299,8 +294,6 @@ def movfuscate_shl(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
         code.append("eroare shl\n")
         return
 
-    # Use movfuscate_mul logic basically
-    # Just reusing register load logic
     if dest_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl {dest_addr}, v_val")
     else:
@@ -393,7 +386,6 @@ def movfuscate_inc(table_addr: str, op_addr: str, backup_addr: str):
     code.append(f"movl %eax, {backup_addr}+4")
     code.append(f"movl %ebx, {backup_addr}+8")
     
-    # Load op to v_dest using reg bridge if memory
     _load_to_virtual(code, op_addr, "v_dest")
     
     inc_offset = 0x120000
@@ -427,17 +419,7 @@ def movfuscate_inc(table_addr: str, op_addr: str, backup_addr: str):
     if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl v_dest, {op_addr}")
     else:
-        # Write back to memory using %eax bridge (safe now because we restored eax, but we can overwrite it again temporarily or use another way)
-        # Wait, we just restored eax. If we use it, we lose the value.
-        # But inc/dec modifies FLAGS, not necessarily EAX (except result).
-        # Actually INC doesn't affect CARRY flag in real x86 but here we simulate it.
-        # We need to write v_dest to op_addr.
-        # We can use %ecx again since we don't need it after this.
-        code.append(f"movl {backup_addr}, %ecx") # Restore ECX just in case user expects it
-        # But we need a register to write to memory.
-        # Let's use %eax as temp, assuming INC doesn't need to preserve EAX value if it wasn't the operand.
-        # Actually INC preserves other registers.
-        # We can use the stack!
+        code.append(f"movl {backup_addr}, %ecx")
         code.append("pushl %eax")
         code.append(f"movl v_dest, %eax")
         code.append(f"movl %eax, {op_addr}")
@@ -453,7 +435,6 @@ def movfuscate_dec(table_addr: str, op_addr: str, backup_addr: str):
     code.append(f"movl %eax, {backup_addr}+4")
     code.append(f"movl %ebx, {backup_addr}+8")
 
-    # Load op to v_dest
     _load_to_virtual(code, op_addr, "v_dest")
 
     dec_offset = 0x120200
@@ -487,7 +468,6 @@ def movfuscate_dec(table_addr: str, op_addr: str, backup_addr: str):
     if op_addr in ["%eax", "%ebx", "%ecx", "%edx", "%esp", "%esi"]:
         code.append(f"movl v_dest, {op_addr}")
     else:
-        # Write back to memory
         code.append("pushl %eax")
         code.append(f"movl v_dest, %eax")
         code.append(f"movl %eax, {op_addr}")
