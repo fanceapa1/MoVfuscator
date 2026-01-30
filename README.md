@@ -15,7 +15,7 @@ Este capabil de a reproduce instructiunile urmatoare:
 > lea, push, pop
 
 - Conditii si bucle
-> cmp, loop, jump-uri.
+> cmp, loop, jump-uri
 
 # Cum functioneaza
 MOVfuscatorul "compileaza" codul, tinand minte toate variabilele care sunt folosite in programul assembly si face operatii pentru a stii la fiecare moment al
