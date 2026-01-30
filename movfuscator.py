@@ -168,25 +168,23 @@ def movfuscate_sub(table_addr: str, src_addr: str, dest_addr: str, backup_addr: 
 
 def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
     code = []
-    
-    if src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+    code.append("movl %eax, v_val")
+
+    if src_addr.startswith('$'):
         code.append(f"movl {src_addr}, v_src")
-    elif src_addr.startswith('$'):
+    elif src_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
         code.append(f"movl {src_addr}, v_src")
     else:
-        code.append("pushl %eax")
-        code.append(f"movl {src_addr}, %eax")
-        code.append("movl %eax, v_src")
-        code.append("popl %eax")
+        code.append(f"movl {src_addr}, %ecx")
+        code.append("movl %ecx, v_src")
 
-    code.append(f"movl %eax, v_val")       
-    code.append(f"movl $0, v_res")
+    code.append("movl $0, v_res")
     
     mul_low_offset = 0x40000
     mul_high_offset = 0x50000
     
-    for i in range(4):      
-        for j in range(4):  
+    for i in range(4): 
+        for j in range(4):
             pos = i + j
             if pos >= 4:
                 continue
@@ -211,11 +209,12 @@ def movfuscate_mul(table_addr: str, src_addr: str, backup_addr: str):
                 
                 code.append("movl $0, v_temp")
                 code.append(f"movb %al, v_temp+{pos+1}")
+                
                 code.append(movfuscate_add(table_addr, "v_temp", "v_res", backup_addr))
 
-    code.append(f"movl v_res, %eax")
-    code.append(f"movl $0, %edx") 
-    code.append("\n")
+    code.append("movl v_res, %eax")
+    code.append("movl $0, %edx")
+    code.append("")
     
     return "\n".join(code)
 

@@ -215,6 +215,38 @@ def liniarizeCode(inputText: str):
                 registrii[op2] = res
                 flags["ZF"] = 1 if res == 0 else 0
 
+        elif instructiune == "or":
+            output += f'{linie}\n'
+            val = get_valoare_operand(op1)
+            if op2 in registrii:
+                old = registrii[op2]
+                res = registrii[op2] | val
+                registrii[op2] = res
+                flags["ZF"] = 1 if res == 0 else 0
+
+        elif instructiune == "mul":
+            output += f'{linie}\n'
+            val = get_valoare_operand(op1)
+            # mul calculates EDX:EAX = EAX * operand
+            old_eax = registrii["%eax"]
+            res = old_eax * val
+            registrii["%eax"] = res & 0xFFFFFFFF
+            registrii["%edx"] = (res >> 32) & 0xFFFFFFFF
+
+        elif instructiune == "shl":
+            output += f'{linie}\n'
+            val = get_valoare_operand(op1)
+            if op2 in registrii:
+                old = registrii[op2]
+                registrii[op2] <<= val
+
+        elif instructiune == "shr":
+            output += f'{linie}\n'
+            val = get_valoare_operand(op1)
+            if op2 in registrii:
+                old = registrii[op2]
+                registrii[op2] >>= val
+
         i += 1
 
     return output
