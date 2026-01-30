@@ -262,6 +262,104 @@ def movfuscate_div(table_addr: str, src_addr: str, backup_addr: str):
 
     return "\n".join(code)
 
+def movfuscate_shl(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+
+    try:
+        if src_addr.startswith('$'):
+            shift_count = int(src_addr.replace('$', ''))
+            multiplier = 1 << shift_count
+            src_val_str = f"${multiplier}"
+    except:
+        code.append("eroare shl\n")
+        return
+
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl {dest_addr}, v_val")
+    else:
+        code.append(f"movl {dest_addr}, %ecx") 
+        code.append(f"movl %ecx, v_val")
+        
+    code.append(f"movl {src_val_str}, v_src")
+
+    code.append("movl $0, v_res")
+
+    mul_low_offset = 0x40000
+    mul_high_offset = 0x50000
+    
+    for i in range(4): 
+        for j in range(4):
+            pos = i + j
+            if pos >= 4: continue
+
+            code.append("movl $0, %ecx")
+            code.append(f"movb v_val+{i}, %ch")
+            code.append(f"movb v_src+{j}, %cl")
+            code.append(f"movb {table_addr} + {mul_low_offset}(%ecx), %al")
+            
+            code.append("movl $0, v_temp")
+            code.append(f"movb %al, v_temp+{pos}")
+            code.append(movfuscate_add(table_addr, "v_temp", "v_res", backup_addr))
+
+            if pos + 1 < 4:
+                code.append("movl $0, %ecx")
+                code.append(f"movb v_val+{i}, %ch")
+                code.append(f"movb v_src+{j}, %cl")
+                code.append(f"movb {table_addr} + {mul_high_offset}(%ecx), %al")
+                
+                code.append("movl $0, v_temp")
+                code.append(f"movb %al, v_temp+{pos+1}")
+                code.append(movfuscate_add(table_addr, "v_temp", "v_res", backup_addr))
+
+    code.append(f"movl v_res, %eax")
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl %eax, {dest_addr}")
+    else:
+        code.append(f"movl %eax, {dest_addr}")
+    
+    code.append("")
+    return "\n".join(code)
+
+def movfuscate_shr(table_addr: str, src_addr: str, dest_addr: str, backup_addr: str):
+    code = []
+
+    try:
+        if src_addr.startswith('$'):
+            shift_count = int(src_addr.replace('$', ''))
+            divisor = 1 << shift_count
+            src_val_str = f"${divisor}"
+    except:
+        code.append("eroare shr\n")
+        return
+
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl {dest_addr}, v_val")
+    else:
+        code.append(f"movl {dest_addr}, %ecx")
+        code.append(f"movl %ecx, v_val")
+
+    code.append(f"movl {src_val_str}, v_src")
+
+    div_offset = 0x70000
+    
+    code.append("movl $0, %ecx")
+    code.append("movb v_val, %ch")
+    code.append("movb v_src, %cl")
+    
+    code.append(f"movb {table_addr} + {div_offset}(%ecx), %al")
+
+    code.append("movl $0, v_eax")
+    code.append("movb %al, v_eax")
+
+    code.append("movl v_eax, %eax")
+    if dest_addr in ["%eax", "%ebx", "%ecx", "%edx"]:
+        code.append(f"movl %eax, {dest_addr}")
+    else:
+        code.append(f"movl %eax, {dest_addr}")
+    
+    code.append("")
+    return "\n".join(code)
+
 if __name__=="__main__":
     initializeMemory()
     linearInput = liniarizeCode(inputFile.readlines())
@@ -301,6 +399,14 @@ if __name__=="__main__":
             case 'div' | 'divl':
                 param1 = parts[1].strip()
                 outputFile.write(movfuscate_div('M', param1, 'backup_space'))
+            case 'shl' | 'shll':
+                param1 = parts[1][:-1].strip()
+                param2 = parts[2].strip()
+                outputFile.write(movfuscate_shl('M', param1, param2, 'backup_space'))
+            case 'shr' | 'shrl':
+                param1 = parts[1][:-1].strip()
+                param2 = parts[2].strip()
+                outputFile.write(movfuscate_shr('M', param1, param2, 'backup_space'))
             case _:
                 outputFile.write(f'{line} # de movfuscat')
 
