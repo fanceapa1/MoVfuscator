@@ -7,7 +7,13 @@ Acesta primeste un fisier ( al carui continut este codul Assembly ) si returneaz
 El nu este gandit pentru a face un cod "mai eficient", ci doar pentru a inlocui toate instructiunile cu MOV-uri.
 
 Este capabil de a reproduce instructiunile urmatoare: 
-> inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl, lea, push, pop, cmp, loop si jump-uri.
+
+Operatii
+> inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl
+Utilizarea stivei
+> lea, push, pop
+Conditii si bucle
+> cmp, loop, jump-uri.
 
 # Cum functioneaza
 MOVfuscatorul "compileaza" codul, tinand minte toate variabilele care sunt folosite in programul assembly si face operatii pentru a stii la fiecare moment al
