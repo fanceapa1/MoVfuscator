@@ -23,7 +23,7 @@ Pentru a verifica daca MOVfuscatorul functioneaza, puteti descarca cateva coduri
 Sau puteti folosi aceste link-uri:
 
     https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x02.pdf
-
+######
     https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x04.pdf
 
 # Limite
