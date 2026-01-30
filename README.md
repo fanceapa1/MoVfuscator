@@ -15,6 +15,13 @@ MOVfuscatorul parseaza codul primit, linie cu linie, intr-un obiect, pentru a-l 
 utilizand functiile predefinite, executa calculele si scrie in fisierul de output codul asociat acelei operatii. Pentru fiecare loop, pe care il avem, programul
 cunoaste situatia in care se afla variabilele din asssembly si va decide daca bucla continua sau este intrerupta.
 
+# Testare
+Pentru a verifica daca MOVfuscatorul functioneaza, puteti folosi un cod din aceste pdf-uri:
+######
+    https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x02.pdf
+######
+    https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x04.pdf
+
 # Limite
 Programul nu stie sa inlocuiasca instructiunea "call".
 Procedurile care pot fi chemate trebuie sa fie functii din C ( exemplu: printf, scanf ).
