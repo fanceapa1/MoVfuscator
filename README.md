@@ -35,7 +35,7 @@ Metoda prin care movfuscator-ul obtine rezultatele instructiunilor (aritmetice, 
 |:------------------------------------------:|
 | ![LookUpTable](https://github.com/user-attachments/assets/0c3a5059-0768-4ae4-a33a-063d0e7043ac)         |
 
-Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
+Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul `lookupTableGenerator.py`.
 
 Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa, in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor si registrilor care sunt folosite in program, si executa operatiile pentru a stii la fiecare moment al programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch (ii da paste sau nu in codul output).
 
