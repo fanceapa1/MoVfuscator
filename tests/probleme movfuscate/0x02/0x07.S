@@ -13,6 +13,14 @@ v_val: .space 4
 v_res: .space 4
 v_temp: .space 4
 v_mul_src: .space 4
+a: .ascii "Assembly"
+b: .word 0x25
+c: .asciz "x86"
+d: .asciz ";;;"
+e: .long 0x15
+.text
+.global main
+main:
 mov $4, %eax
 mov $1, %ebx
 mov $a, %ecx
@@ -136,4 +144,8 @@ movl v_dest, %eax
 movl %eax, e
 movl backup_space+4, %eax
 mov e, %edx
+int $0x80
+et_exit:
+mov $1, %eax
+mov $0, %ebx
 int $0x80

@@ -13,6 +13,9 @@ v_val: .space 4
 v_res: .space 4
 v_temp: .space 4
 v_mul_src: .space 4
+.text
+.global main
+main:
 mov $0x2, %eax
 mov $0x00000001, %edx
 mov $2, %ebx
@@ -35,3 +38,6 @@ movl backup_space, %ecx
 movl v_eax, %eax
 movl v_edx, %edx
 et_exit:
+movl $1, %eax
+mov $0, %ebx
+int $0x80

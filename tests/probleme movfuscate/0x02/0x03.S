@@ -13,6 +13,9 @@ v_val: .space 4
 v_res: .space 4
 v_temp: .space 4
 v_mul_src: .space 4
+x1: .ascii "maria"
+x2: .ascii "maria1"
+x3: .ascii "maria2"
 .text
 .global main
 main:
