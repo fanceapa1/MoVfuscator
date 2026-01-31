@@ -29,7 +29,7 @@ In folderul `/tests/probleme movfuscate` se pot gasi toate problemele din labora
 
 
 # Cum functioneaza
-Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice, operatii pe biti ) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila (256x256), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
+Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice, operatii pe biti ) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila ( 256x256 ), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
 
 | LookUpTable                     |
 |:------------------------------------------:|
@@ -37,7 +37,7 @@ Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice,
 
 Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul `lookupTableGenerator.py`.
 
-Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa, in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor si registrilor care sunt folosite in program, si executa operatiile pentru a stii la fiecare moment al programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch (ii da paste sau nu in codul output).
+Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa, in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor si registrilor care sunt folosite in program, si executa operatiile pentru a stii la fiecare moment al programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch ( ii da paste sau nu in codul output ).
 
 
 # Limite
