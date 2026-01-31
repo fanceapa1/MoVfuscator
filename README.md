@@ -9,78 +9,60 @@
 ⬛️⬜️⬛️⬛️⬛️⬛️⬛️⬜️⬛️⬛️⬛️⬜️⬛️⬛️⬛️⬜️⬛️⬛⬛️⬛️⬛️⬜️⬛️⬜️⬛️⬛️⬛️
 ⬛️⬜️⬛️⬛️⬛️⬛️⬛️⬜️⬛️⬛️⬛️⬛️⬜️⬜️⬜️⬛️⬛️⬛⬛️⬛️⬛️⬛️⬜️⬛️⬛️⬛️⬛️
 ⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛
+# LIVE AICI
+[MOVfuscator](https://movfuscator.onrender.com/)
 
 # Descriere
-[MOVfuscator-ul](https://movfuscator.onrender.com/) este un program care transforma un cod clasic de Assembly x86 ( pe 32 de biti ), intr-un program format exclusiv din instructiuni "mov".
+Movfuscatorul este un script care primeste ca input un cod clasic de Assembly x86 (pe 32 de biti), si returneaza un program "movfuscat", format exclusiv din instructiuni MOV.
 
+
+# Manual de utilizare
 | Interfata                     |
 |:------------------------------------------:|
 | <img width="1545" height="665" alt="MovFuscator" src="https://github.com/user-attachments/assets/7ea9ffc7-aad3-4459-9daf-abb0558914a9" />         |
 
-Acesta primeste un fisier ( al carui continut este codul Assembly ) si returneaza intr-un alt fisier noul cod.
-El nu este gandit pentru a face un cod "mai eficient", ci doar pentru a inlocui toate instructiunile cu MOV-uri.
+Am pus la dispozitie o interfata grafica pentru a face testarea mai usoara. Se poate gasi la link-ul de mai sus.
+Daca vreti sa lucrati prin intermediul liniei de comanda, procedura este urmatoarea:
+Creati in folderul principal (cel care contine `movfuscator.py`) un fisier denumit `in.S`. Rulati script-ul `movfuscator.py`, iar rezultatul va fi furnizat intr-un fisier nou generat, `out.py`.
 
-Este capabil de a reproduce instructiunile urmatoare: 
+In folderul `/tests/probleme movfuscate` se pot gasi toate problemele din laboratoare, prelucrate deja de script.
 
-- Operatii
-> inc, dec, add, sub, mul, div, and, or, not, xor, shr, shl
-
-- Utilizarea stivei
-> lea, push, pop
-
-- Conditii si bucle
-> cmp, loop, jump-uri
 
 # Cum functioneaza
-MOVfuscatorul "compileaza" codul, tinand minte toate variabilele care sunt folosite in programul assembly si face operatii pentru a stii la fiecare moment al
-programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare.
-
-MOVfuscatorul parseaza codul primit, linie cu linie, intr-un obiect, pentru a-l separa pe etichete. Acesta tine minte in timp real variabilele din registrii si,
-utilizand functiile predefinite, executa calculele si scrie in fisierul de output codul asociat acelei operatii. Pentru fiecare loop, pe care il avem, programul
-cunoaste situatia in care se afla variabilele din asssembly si va decide daca bucla continua sau este intrerupta.
-
-Functiile predefinite functioneaza prin utilizarea unor lookup table-uri. Aceste tabele contin date astfel incat, in urma executiei, registrii sa primeasca 
-valorile potrivite. Noul cod assembly se foloseste de aceste valori pentru a creea o replica a fiecarei linii de cod din input, cu scopul de a functiona 
-independent de MOVfuscator.
+Metoda prin care movfuscator-ul obtine rezultatele instructiunilor (aritmetice, operatii pe biti) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor (spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11). Aceste tabele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila (256x256), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna (asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul).
 
 | LookUpTable                     |
 |:------------------------------------------:|
 | ![LookUpTable](https://github.com/user-attachments/assets/0c3a5059-0768-4ae4-a33a-063d0e7043ac)         |
- 
+
 Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul _lookupTableGenerator.py_.
 
-# Testare
-Pentru a verifica daca MOVfuscatorul functioneaza, puteti descarca cateva coduri urmand folder-ele astfel:
+Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa, in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor si registrilor care sunt folosite in program, si executa operatiile pentru a stii la fiecare moment al programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch (ii da paste sau nu in codul output).
 
-> tests - > probleme movfuscator - > 0x02 sau 0x04
-
-Sau puteti folosi aceste link-uri:
-
-    https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x02.pdf
-######
-    https://cs.unibuc.ro/~crusu/asc/Arhitectura%20Sistemelor%20de%20Calcul%20(ASC)%20-%20Probleme%20Rezolvate%20Laborator%200x04.pdf
 
 # Limite
-Programul nu stie sa inlocuiasca instructiunea "call".
+Etichetele originale (in afara de cea de final) sunt sterse. Prin urmare, ele trebuie sa fie adaugate manual pentru debugging.
 
-Procedurile care pot fi chemate trebuie sa fie functii din C ( exemplu: printf, scanf ).
-
-Etichetele originale ( in afara de cea de final ) sunt sterse. Prin urmare, ele trebuie sa fie adaugate manual pentru debugging.
+Programul nu stie cum sa interpreteze proceduri scrise de utilizator (din cauza lipsei label-urilor). Procedurile care pot fi chemate trebuie sa fie functii din C (printf, scanf, etc.).
 
 Input-ul trebuie sa aiba un format specific ( nu au voie sa lipseasca liniile .data si .text ).
 
 Avand in vedere numarul ridicat de instructiuni "mov" necesare pentru a face o simpla operatie, pentru un cod assembly cu sute de linii o sa returneze unul cu
 zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
 
+Includerea tabelelor de lookup in fiecare program presupune o dimensiune minima de aproximativ 4MB a fiecarui fisier movfuscat.
+
+Movfuscarea instructiunilor "test" si "call" nu este implementata
+
 # Referinte
-Ideea programului a fost preluata de la Christopher Domas [The movfuscator](https://www.youtube.com/watch?v=hsNDLVUzYEs).
+Ideea programului (si mai ales a ideii implementarii tabelelor de lookup) a fost preluata de la Christopher Domas [The movfuscator](https://www.youtube.com/watch?v=hsNDLVUzYEs).
 
 # Echipa
-Mosul Tudor
+Mosul Tudor, 151
 
-Nechifor Stefan-Alexandru
+Nechifor Stefan-Alexandru, 151
 
-Simzianu Teodora
+Simzianu Teodora, 151
 
-Teodorescu Nicolas-Alexandru
+Teodorescu Nicolas-Alexandru, 151
 
