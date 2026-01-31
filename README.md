@@ -29,7 +29,7 @@ In folderul `/tests/probleme movfuscate` se pot gasi toate problemele din labora
 
 
 # Cum functioneaza
-Metoda prin care movfuscator-ul obtine rezultatele instructiunilor (aritmetice, operatii pe biti) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila (256x256), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
+Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice, operatii pe biti ) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila (256x256), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
 
 | LookUpTable                     |
 |:------------------------------------------:|
