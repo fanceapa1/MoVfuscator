@@ -11,6 +11,7 @@
 ⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛️⬛
 # LIVE AICI
 [MOVfuscator](https://movfuscator.onrender.com/)
+Este posibil ca incarcarea site-ului sa dureze putin daca nu a mai fost accesat de ceva timp.
 
 # Descriere
 Movfuscatorul este un script care primeste ca input un cod clasic de Assembly x86 ( pe 32 de biti ) si returneaza un program "movfuscat", format exclusiv din instructiuni MOV.
