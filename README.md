@@ -29,21 +29,21 @@ In folderul `/tests/probleme movfuscate` se pot gasi toate problemele din labora
 
 
 # Cum functioneaza
-Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice, operatii pe biti ) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, printr-un fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila ( 256x256 ), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
+Metoda prin care movfuscator-ul obtine rezultatele instructiunilor ( aritmetice, operatii pe biti ) este prin lookup table-uri. Aceste tabele contin rezultatele operatiilor ( spre exemplu, tabelul addTable[10][11] contine rezultatul adunarii 10+11 ). Tabelele sunt incarcate in memorie pentru fiecare program movfuscat, sub forma unui fisier binar `tables.bin`. Pentru a pastra dimensiunea tabelelor rezonabila ( 256x256 ), operatiile movfuscate sunt calculate pe fiecare byte al valorilor, iar apoi rezultatele sunt puse impreuna ( asemenea unui circuit pentru o operatie aritmetica, tinand cont de carry acolo unde este cazul ).
 
 | LookUpTable                     |
 |:------------------------------------------:|
 | ![LookUpTable](https://github.com/user-attachments/assets/0c3a5059-0768-4ae4-a33a-063d0e7043ac)         |
 
-Metoda prin care generam aceste lookup table-uri, poate fi vazuta in fisierul `lookupTableGenerator.py`.
+Metoda prin care generam aceste lookup table-uri poate fi observata in fisierul `lookupTableGenerator.py`.
 
-Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa, in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor si registrilor care sunt folosite in program, si executa operatiile pentru a stii la fiecare moment al programului ce se va intampla. El anticipeaza ce se va intampla in urma fiecarui calcul, bucla sau operatie de comparare. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch ( ii da paste sau nu in codul output ).
+Pentru a trata instructiunile conditionale si buclele, MOVfuscatorul "simuleaza" codul sursa in aceeasi maniera in care ar face-o un om, memorand starile curente ale tuturor variabilelelor/registrilor si executa operatiile pentru a stii la fiecare moment al programului starea memoriei. Pentru fiecare salt din program, script-ul decide daca sa "intre" pe noul branch ( ii da paste sau nu in codul output ).
 
 
 # Limitari
 Etichetele originale ( in afara de cea de final ) sunt sterse. Prin urmare, ele trebuie sa fie adaugate manual pentru debugging.
 
-Programul nu stie cum sa interpreteze proceduri scrise de utilizator ( din cauza lipsei label-urilor ). Procedurile care pot fi chemate trebuie sa fie functii din C ( printf, scanf, etc. ).
+Programul nu stie cum sa interpreteze proceduri scrise de utilizator ( din cauza lipsei label-urilor ). Procedurile care pot fi apelate trebuie sa fie functii externe ( printf, scanf, etc. ).
 
 Input-ul trebuie sa aiba un format specific ( nu au voie sa lipseasca liniile .data si .text ).
 
@@ -52,7 +52,7 @@ zeci sau chiar sute de mii de linii, asa ca timpul de executie poate fi lung.
 
 Includerea tabelelor de lookup in fiecare program presupune o dimensiune minima de aproximativ 4MB a fiecarui fisier movfuscat.
 
-Movfuscarea instructiunilor "test" si "call" nu este implementata
+Movfuscarea instructiunilor "test" si "call" nu este implementata.
 
 # Referinte
 Ideea programului ( si mai ales a ideii implementarii tabelelor de lookup ) a fost preluata de la Christopher Domas [The movfuscator](https://www.youtube.com/watch?v=hsNDLVUzYEs).
