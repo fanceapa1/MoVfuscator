@@ -13,6 +13,8 @@ v_val: .space 4
 v_res: .space 4
 v_temp: .space 4
 v_mul_src: .space 4
+str1: .ascii "ASC"
+str2: .ascii "FMI"
 .text
 .global main
 main:
