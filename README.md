@@ -13,7 +13,7 @@
 [MOVfuscator](https://movfuscator.onrender.com/)
 
 # Descriere
-Movfuscatorul este un script care primeste ca input un cod clasic de Assembly x86 ( pe 32 de biti ), si returneaza un program "movfuscat", format exclusiv din instructiuni MOV.
+Movfuscatorul este un script care primeste ca input un cod clasic de Assembly x86 ( pe 32 de biti ) si returneaza un program "movfuscat", format exclusiv din instructiuni MOV.
 
 
 # Manual de utilizare
