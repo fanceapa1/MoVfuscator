@@ -23,7 +23,7 @@ Movfuscatorul este un script care primeste ca input un cod clasic de Assembly x8
 
 Am pus la dispozitie o interfata grafica pentru a face testarea mai usoara. Se poate gasi la link-ul de mai sus.
 Daca vreti sa lucrati prin intermediul liniei de comanda, procedura este urmatoarea:
-Creati in folderul principal ( cel care contine `movfuscator.py` ) un fisier denumit `in.S`. Rulati script-ul `movfuscator.py`, iar rezultatul va fi furnizat intr-un fisier nou generat, `out.py`.
+Creati in folderul principal ( cel care contine `movfuscator.py` ) un fisier denumit `in.S`. Rulati script-ul `movfuscator.py`, iar rezultatul va fi furnizat intr-un fisier nou generat, `out.S`.
 
 In folderul `/tests/probleme movfuscate` se pot gasi toate problemele din laboratoare, prelucrate deja de script.
 
